@@ -1,0 +1,50 @@
+# Environment variables (CRITICAL - Contains API keys!)
+.env
+.env.local
+.env.production
+.env.development
+
+# Dependencies
+node_modules/
+UI/node_modules/
+server/node_modules/
+
+# Build outputs
+dist/
+build/
+UI/dist/
+UI/build/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Vite
+.vite/
+
+# Package manager files (optional)
+package-lock.json
+
+# User data (if you want to keep private)
+UI/data.json
+

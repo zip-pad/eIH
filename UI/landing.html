@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eInformation Hub - Welcome</title>
+    <link rel="stylesheet" href="landing.css">
+</head>
+<body class="landing-page">
+    <div class="welcome-container">
+        <h1 class="welcome-title">Welcome</h1>
+        
+        <form id="auth-form" class="auth-form">
+            <div class="form-group">
+                <input type="email" id="email" name="email" placeholder="Email" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+            </div>
+
+            <div class="form-group" id="confirm-password-group" style="display: none;">
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password">
+            </div>
+
+            <button type="submit" class="auth-submit" id="auth-submit">
+                Sign In
+            </button>
+        </form>
+
+        <div class="auth-switch">
+            <p id="auth-switch-text">Don't have an account? <a href="#" onclick="switchAuthTab('signup')">Sign up</a></p>
+        </div>
+
+        <div class="error-message" id="error-message" style="display: none;"></div>
+    </div>
+
+    <script type="module" src="landing.js"></script>
+</body>
+</html>

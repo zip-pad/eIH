@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Library - Knowledge Hub</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+
+    <!-- Main Content Area -->
+    <main>
+        <!-- Library View (Default) -->
+        <!-- Header with typing effect -->
+        <header id="main-header">
+            <h1 id="typing-header" class="typing-text">Knowledge Hub</h1>
+        </header>
+
+        <!-- Overlay Search Bar -->
+        <div id="overlay-search" class="overlay-search">
+            <div class="overlay-search-container">
+                <input type="text" id="overlay-search-input" placeholder="Search your library..." autocomplete="off" spellcheck="false">
+            </div>
+        </div>
+
+        <div id="library-view" class="library-view">
+            <div class="planet-container" style="display: none;">
+                <div id="knowledge-planet"></div>
+            </div>
+            <div id="masonry-container" class="masonry-container">
+                <div class="masonry-grid" id="masonry-grid"></div>
+            </div>
+        </div>
+
+        <!-- Modal Overlays -->
+        <div id="modal-overlay" class="modal-overlay">
+            <!-- Add New Item Modal -->
+            <div id="add-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="type-tabs">
+                            <button type="button" id="book-tab" class="type-tab active" data-type="Book">Book</button>
+                            <button type="button" id="paper-tab" class="type-tab" data-type="Paper">Paper</button>
+                        </div>
+                        <button class="modal-close" onclick="closeModal()">&times;</button>
+                    </div>
+                    
+                    <!-- Search Bar Section -->
+                    <div class="search-section">
+                        <div class="search-bar-container">
+                            <input type="text" id="add-modal-search" placeholder="Search by title, author, or category..." class="search-input" autocomplete="off" spellcheck="false">
+                            <button type="button" id="add-modal-search-btn" class="search-btn">🔍</button>
+                            <button type="button" id="add-modal-scan-btn" class="scan-btn" title="Scan book cover">Scan</button>
+                        </div>
+                        <div id="add-modal-search-results" class="search-results"></div>
+                    </div>
+                    
+                    <!-- Camera Modal for Scanning -->
+                    <div id="camera-modal" class="camera-modal">
+                        <div class="camera-modal-content">
+                            <div class="camera-header">
+                                <h3>Scan Book Cover</h3>
+                                <button id="close-camera-btn" class="camera-close">&times;</button>
+                            </div>
+                            <div class="camera-container">
+                                <video id="camera-video" autoplay playsinline></video>
+                                <canvas id="camera-canvas" style="display: none;"></canvas>
+                                <div class="camera-overlay">
+                                    <div class="scan-frame"></div>
+                                    <p class="scan-instructions">Position the book cover within the frame and click "Capture"</p>
+                                </div>
+                            </div>
+                            <div class="camera-controls">
+                                <button id="capture-btn" class="capture-btn">📷 Capture</button>
+                                <button id="retake-btn" class="retake-btn" style="display: none;">🔄 Retake</button>
+                                <button id="process-btn" class="process-btn" style="display: none;">🔍 Process Image</button>
+                            </div>
+                            <div id="scan-progress" class="scan-progress" style="display: none;">
+                                <div class="progress-text">Processing image with AI...</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form id="add-item-form">
+                        <div class="form-group cover-preview">
+                            <label>Cover Preview</label>
+                            <div class="cover-image-container">
+                                <img id="cover-preview" src="" alt="Cover preview" style="display: none;">
+                                <div class="no-cover" id="no-cover">No cover image</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="item-title">Title *</label>
+                                <input type="text" id="item-title" name="title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="item-author">Author</label>
+                                <input type="text" id="item-author" name="author">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="item-type">Type</label>
+                                <input type="text" id="item-type" name="type" value="Book" readonly style="background: rgba(255, 255, 255, 0.05); cursor: default;">
+                            </div>
+                            <div class="form-group">
+                                <label for="item-publishing-year">Publishing Year</label>
+                                <input type="number" id="item-publishing-year" name="publishingYear" min="1000" max="2030">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="item-status">Status</label>
+                                <select id="item-status" name="status">
+                                    <option value="">Select status...</option>
+                                    <option value="finished">Finished</option>
+                                    <option value="reading">Reading</option>
+                                    <option value="not-started">Not Started</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="item-pages">Pages</label>
+                                <input type="number" id="item-pages" name="pages" min="1" max="10000">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="item-difficulty">Difficulty</label>
+                                <select id="item-difficulty" name="difficulty">
+                                    <option value="">Select difficulty...</option>
+                                    <option value="1">1 - Very Easy</option>
+                                    <option value="2">2 - Easy</option>
+                                    <option value="3">3 - Fairly Easy</option>
+                                    <option value="4">4 - Moderate</option>
+                                    <option value="5">5 - Somewhat Hard</option>
+                                    <option value="6">6 - Hard</option>
+                                    <option value="7">7 - Very Hard</option>
+                                    <option value="8">8 - Extremely Hard</option>
+                                    <option value="9">9 - Expert Level</option>
+                                    <option value="10">10 - Master Level</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="item-language">Language</label>
+                                <select id="item-language" name="language">
+                                    <option value="">Select language...</option>
+                                    <option value="english">English</option>
+                                    <option value="german">German</option>
+                                    <option value="mandarin">Mandarin Chinese</option>
+                                    <option value="hindi">Hindi</option>
+                                    <option value="spanish">Spanish</option>
+                                    <option value="french">French</option>
+                                    <option value="arabic">Arabic</option>
+                                    <option value="bengali">Bengali</option>
+                                    <option value="russian">Russian</option>
+                                    <option value="portuguese">Portuguese</option>
+                                    <option value="indonesian">Indonesian</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="item-url">URL</label>
+                                <input type="url" id="item-url" name="url" placeholder="https://example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="item-cover-url">Cover Image URL</label>
+                                <input type="url" id="item-cover-url" name="coverUrl" placeholder="https://example.com/cover.jpg">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="item-rating">Rating</label>
+                            <div class="star-rating" id="item-rating">
+                                <span class="star" data-rating="0.5">★</span>
+                                <span class="star" data-rating="1">★</span>
+                                <span class="star" data-rating="1.5">★</span>
+                                <span class="star" data-rating="2">★</span>
+                                <span class="star" data-rating="2.5">★</span>
+                                <span class="star" data-rating="3">★</span>
+                                <span class="star" data-rating="3.5">★</span>
+                                <span class="star" data-rating="4">★</span>
+                                <span class="star" data-rating="4.5">★</span>
+                                <span class="star" data-rating="5">★</span>
+                                <span class="rating-display">No rating</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="item-category">Category</label>
+                            <input type="text" id="item-category" name="category" placeholder="e.g., Science, Fiction, Technology">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="item-summary">Summary</label>
+                            <textarea id="item-summary" name="summary" rows="4" placeholder="Brief summary of the content..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="item-notes">Notes</label>
+                            <textarea id="item-notes" name="notes" rows="3" placeholder="Your thoughts, key insights, or additional notes..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Add to Library</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Statistics Modal -->
+            <div id="stats-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Library Statistics</h2>
+                        <button class="modal-close" onclick="closeModal()">&times;</button>
+                    </div>
+                    <div id="stats-content" class="stats-grid"></div>
+                </div>
+            </div>
+
+            <!-- Search Modal -->
+            <div id="search-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Search Your Library</h2>
+                        <button class="modal-close" onclick="closeModal()">&times;</button>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="search-input" placeholder="Search by title, author, category...">
+                        <button id="search-btn">Search</button>
+                    </div>
+                    <div id="search-results" class="search-results"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Main Navigation Sidebar -->
+    <nav id="main-nav" class="main-navigation">
+        <div class="nav-links">
+            <a href="#" class="nav-link" data-action="add">Add New</a>
+            <a href="#" class="nav-link" data-section="search">Search</a>
+            <a href="#" class="nav-link" data-action="signout">Sign Out</a>
+        </div>
+        
+        <!-- Filter Dropdown -->
+        <div class="settings-container">
+            <button class="settings-toggle" id="filter-toggle">
+                <span>Filter</span>
+                <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="settings-dropdown" id="filter-dropdown">
+                <div class="dropdown-section">
+                    <h4>Type</h4>
+                    <div class="dropdown-options">
+                        <button class="dropdown-option active" data-filter="type" data-value="all">
+                            <span>All</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="type" data-value="Book">
+                            <span>Books</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="type" data-value="Paper">
+                            <span>Papers</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="dropdown-section">
+                    <h4>Status</h4>
+                    <div class="dropdown-options">
+                        <button class="dropdown-option active" data-filter="status" data-value="all">
+                            <span>All</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="status" data-value="finished">
+                            <span>Finished</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="status" data-value="reading">
+                            <span>Reading</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="status" data-value="not-started">
+                            <span>Not Started</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="dropdown-section">
+                    <h4>Rating</h4>
+                    <div class="dropdown-options">
+                        <button class="dropdown-option active" data-filter="rating" data-value="all">
+                            <span>All</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="rating" data-value="5">
+                            <span>5 Stars</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="rating" data-value="4">
+                            <span>4+ Stars</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="rating" data-value="3">
+                            <span>3+ Stars</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="dropdown-section">
+                    <h4>Difficulty</h4>
+                    <div class="dropdown-options">
+                        <button class="dropdown-option active" data-filter="difficulty" data-value="all">
+                            <span>All</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="difficulty" data-value="easy">
+                            <span>Easy (1-3)</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="difficulty" data-value="medium">
+                            <span>Medium (4-7)</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="difficulty" data-value="hard">
+                            <span>Hard (8-10)</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="dropdown-section">
+                    <h4>Language</h4>
+                    <div class="dropdown-options">
+                        <button class="dropdown-option active" data-filter="language" data-value="all">
+                            <span>All</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="language" data-value="english">
+                            <span>English</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="language" data-value="german">
+                            <span>German</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="language" data-value="spanish">
+                            <span>Spanish</span>
+                        </button>
+                        <button class="dropdown-option" data-filter="language" data-value="french">
+                            <span>French</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="dropdown-section">
+                    <h4>Category</h4>
+                    <div class="dropdown-options" id="category-filter-options">
+                        <button class="dropdown-option active" data-filter="category" data-value="all">
+                            <span>All</span>
+                        </button>
+                        <!-- Categories will be dynamically populated -->
+                    </div>
+                </div>
+                
+                <div class="dropdown-section">
+                    <h4>Actions</h4>
+                    <div class="dropdown-options">
+                        <button class="dropdown-option" id="clear-filters-btn">
+                            <span>Clear All Filters</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Scripts -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
