@@ -6,7 +6,11 @@
   "devCommand": "cd UI && npm run dev",
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/",
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/((?!landing\\.html|index\\.html|assets/).*)",
       "destination": "/index.html"
     }
   ]

@@ -3247,8 +3247,8 @@ async function processImage() {
         // Convert data URL to base64
         const base64Data = capturedImageData.split(',')[1];
         
-        // Send to backend for processing with enhanced error handling
-        const response = await fetch('http://localhost:3001/api/scan/process', {
+        // Send to Vercel API for processing
+        const response = await fetch('/api/scan/process', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
