@@ -3248,7 +3248,7 @@ async function processImage() {
         const base64Data = capturedImageData.split(',')[1];
         
         // Send to Vercel API for processing
-        const response = await fetch('/api/scan/process', {
+        const response = await fetch('/api/scan', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',

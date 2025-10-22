@@ -4,6 +4,11 @@
   "framework": null,
   "installCommand": "cd UI && npm install",
   "devCommand": "cd UI && npm run dev",
+  "functions": {
+    "api/scan.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "rewrites": [
     {
       "source": "/",
