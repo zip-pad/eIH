@@ -3266,6 +3266,12 @@ async function processImage() {
         console.log('Response status:', response.status);
         console.log('Response headers:', response.headers);
         
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('API Error Response:', errorText);
+            throw new Error(`API Error ${response.status}: ${errorText}`);
+        }
+        
         const result = await response.json();
         console.log('Raw API response:', result);
         
@@ -3287,7 +3293,8 @@ async function processImage() {
         
     } catch (error) {
         console.error('Error processing image:', error);
-        showNotification(`Error processing image: ${error.message}`, 'error');
+        const errorMessage = error.message || error.toString() || 'Unknown error occurred';
+        showNotification(`Error processing image: ${errorMessage}`, 'error');
     } finally {
         // Hide progress
         progressDiv.style.display = 'none';
