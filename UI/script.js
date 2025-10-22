@@ -3280,7 +3280,13 @@ async function processImage() {
             
             // Handle the results with error protection
             try {
-                handleScanResults(result.data);
+                // The API returns {success: true, data: extractedInfo}
+                // We need to convert this to the format handleScanResults expects
+                const scanData = {
+                    extractedInfo: result.data,
+                    searchResults: [] // We'll search for books based on extracted info
+                };
+                handleScanResults(scanData);
             } catch (handleError) {
                 console.error('Error in handleScanResults:', handleError);
                 showNotification(`Error handling results: ${handleError.message}`, 'error');

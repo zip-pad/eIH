@@ -1,0 +1,13 @@
+{
+  "name": "einformation-hub",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Digital library with AI-powered book scanning",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd UI && npm run build"
+  },
+  "keywords": ["library", "books", "ai", "scanning"],
+  "author": "Nicolas Wittig",
+  "license": "MIT"
+}
