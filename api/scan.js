@@ -105,7 +105,8 @@ export default async function handler(req, res) {
         }
 
         const generatedText = result.candidates[0].content.parts[0].text;
-        console.log('Generated text:', generatedText);
+        console.log('Generated text from Gemini:', generatedText);
+        console.log('Generated text length:', generatedText.length);
 
         // Parse the JSON response
         let extractedInfo;
@@ -119,13 +120,19 @@ export default async function handler(req, res) {
             }
         } catch (parseError) {
             console.error('Error parsing Gemini response:', parseError);
-            // Fallback data
+            console.error('Raw response that failed to parse:', generatedText);
+            
+            // Try to extract basic info even if JSON parsing fails
+            const titleMatch = generatedText.match(/title[:\s]*["']?([^"',\n]+)["']?/i);
+            const authorMatch = generatedText.match(/author[:\s]*["']?([^"',\n]+)["']?/i);
+            
             extractedInfo = {
-                title: "Sample Book Title",
-                author: "Sample Author",
+                title: titleMatch ? titleMatch[1].trim() : "Unknown Book",
+                author: authorMatch ? authorMatch[1].trim() : "Unknown Author",
                 category: "General",
-                confidence: 0.3,
-                source: 'gemini_ai_fallback'
+                confidence: 0.2,
+                source: 'gemini_ai_parsed_fallback',
+                rawResponse: generatedText.substring(0, 200) + '...'
             };
         }
 
