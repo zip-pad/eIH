@@ -12,8 +12,8 @@ server/node_modules/
 # Build outputs
 dist/
 build/
-UI/dist/
-UI/build/
+# UI/dist/ - Commented out to allow Vercel to build
+# UI/build/ - Commented out to allow Vercel to build
 
 # IDE and Editor files
 .vscode/
