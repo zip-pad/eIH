@@ -1,4 +1,4 @@
-const { createClient } = require('@supabase/supabase-js');
+// Vercel API function for processing scanned book covers
 
 // Initialize Gemini AI service
 class GeminiService {
@@ -145,6 +145,8 @@ class GeminiService {
 const geminiService = new GeminiService();
 
 export default async function handler(req, res) {
+    console.log('API function called:', req.method, req.url);
+    
     // Enable CORS
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -161,6 +163,8 @@ export default async function handler(req, res) {
     }
 
     try {
+        console.log('Processing scan request...');
+        console.log('GEMINI_API_KEY exists:', !!process.env.GEMINI_API_KEY);
         const { imageBase64, mimeType } = req.body;
 
         if (!imageBase64) {
@@ -214,9 +218,11 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.error('Scan process error:', error);
+        console.error('Error stack:', error.stack);
         res.status(500).json({
             success: false,
-            error: error.message || 'Failed to process scan'
+            error: error.message || 'Failed to process scan',
+            details: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
 }
