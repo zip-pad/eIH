@@ -736,8 +736,6 @@ function updateMasonryDisplay(itemsToDisplay = null) {
     if (items.length === 0) {
         masonryGrid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: rgba(255, 255, 255, 0.6);">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
-                <h3 style="font-size: 1.5rem; margin-bottom: 2rem; color: #ffffff;">Your Library is Empty</h3>
                 <button onclick="openModal('add-modal')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 0.75rem 2rem; border-radius: 8px; cursor: pointer; font-weight: 500;">
                     Add Your First Item
                 </button>
