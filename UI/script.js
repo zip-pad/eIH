@@ -368,16 +368,7 @@ function setupMainNavigation() {
             filterToggle.classList.toggle('active');
             
             // Disable/enable sidebar based on dropdown state
-            const mainNav = document.getElementById('main-nav');
-            if (mainNav) {
-                if (isOpening) {
-                    mainNav.style.pointerEvents = 'none';
-                    mainNav.style.opacity = '0.5';
-                } else {
-                    mainNav.style.pointerEvents = 'auto';
-                    mainNav.style.opacity = '1';
-                }
-            }
+            setSidebarState(isOpening);
         });
         
         // Close dropdown when clicking outside
@@ -387,11 +378,7 @@ function setupMainNavigation() {
                 filterToggle.classList.remove('active');
                 
                 // Re-enable sidebar when filter is closed
-                const mainNav = document.getElementById('main-nav');
-                if (mainNav) {
-                    mainNav.style.pointerEvents = 'auto';
-                    mainNav.style.opacity = '1';
-                }
+                setSidebarState(false);
             }
         });
     }
@@ -1070,10 +1057,7 @@ function openModal(modalId) {
     libraryView.classList.add('blurred');
     
     // Disable sidebar/navigation when modal is open
-    if (mainNav) {
-        mainNav.style.pointerEvents = 'none';
-        mainNav.style.opacity = '0.5';
-    }
+    setSidebarState(true);
     
     // Add click outside to close functionality
     overlay.addEventListener('click', function(e) {
@@ -1085,6 +1069,38 @@ function openModal(modalId) {
 
 // Make openModal globally accessible
 window.openModal = openModal;
+
+// Centralized function to disable/enable sidebar
+function setSidebarState(disabled) {
+    const mainNav = document.getElementById('main-nav');
+    if (mainNav) {
+        if (disabled) {
+            mainNav.style.pointerEvents = 'none';
+            mainNav.style.opacity = '0.5';
+            mainNav.style.userSelect = 'none';
+            mainNav.setAttribute('data-disabled', 'true');
+        } else {
+            mainNav.style.pointerEvents = 'auto';
+            mainNav.style.opacity = '1';
+            mainNav.style.userSelect = 'auto';
+            mainNav.removeAttribute('data-disabled');
+        }
+    }
+}
+
+// Global event listener to prevent sidebar interactions when disabled
+document.addEventListener('click', function(e) {
+    const mainNav = document.getElementById('main-nav');
+    if (mainNav && mainNav.getAttribute('data-disabled') === 'true') {
+        // Check if click is on sidebar or its children
+        if (mainNav.contains(e.target)) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Sidebar interaction blocked - modal is open');
+            return false;
+        }
+    }
+});
 
 // This function closes the modal overlay
 function closeModal() {
@@ -1098,10 +1114,7 @@ function closeModal() {
     libraryView.classList.remove('blurred');
     
     // Re-enable sidebar/navigation when modal is closed
-    if (mainNav) {
-        mainNav.style.pointerEvents = 'auto';
-        mainNav.style.opacity = '1';
-    }
+    setSidebarState(false);
     
     // Hide all modals
     document.querySelectorAll('.modal').forEach(modal => {
@@ -3543,11 +3556,7 @@ function openOverlaySearch() {
     document.body.classList.add('search-active');
     
     // Disable sidebar when search is active
-    const mainNav = document.getElementById('main-nav');
-    if (mainNav) {
-        mainNav.style.pointerEvents = 'none';
-        mainNav.style.opacity = '0.5';
-    }
+    setSidebarState(true);
     
     // Show background
     if (overlayBg) {
@@ -3578,11 +3587,7 @@ function closeOverlaySearch() {
     document.body.classList.remove('search-active');
     
     // Re-enable sidebar when search is closed
-    const mainNav = document.getElementById('main-nav');
-    if (mainNav) {
-        mainNav.style.pointerEvents = 'auto';
-        mainNav.style.opacity = '1';
-    }
+    setSidebarState(false);
     
     // Hide background
     if (overlayBg) {
