@@ -363,8 +363,21 @@ function setupMainNavigation() {
     if (filterToggle && filterDropdown) {
         filterToggle.addEventListener('click', function(e) {
             e.stopPropagation();
+            const isOpening = !filterDropdown.classList.contains('active');
             filterDropdown.classList.toggle('active');
             filterToggle.classList.toggle('active');
+            
+            // Disable/enable sidebar based on dropdown state
+            const mainNav = document.getElementById('main-nav');
+            if (mainNav) {
+                if (isOpening) {
+                    mainNav.style.pointerEvents = 'none';
+                    mainNav.style.opacity = '0.5';
+                } else {
+                    mainNav.style.pointerEvents = 'auto';
+                    mainNav.style.opacity = '1';
+                }
+            }
         });
         
         // Close dropdown when clicking outside
@@ -372,6 +385,13 @@ function setupMainNavigation() {
             if (!filterToggle.contains(e.target) && !filterDropdown.contains(e.target)) {
                 filterDropdown.classList.remove('active');
                 filterToggle.classList.remove('active');
+                
+                // Re-enable sidebar when filter is closed
+                const mainNav = document.getElementById('main-nav');
+                if (mainNav) {
+                    mainNav.style.pointerEvents = 'auto';
+                    mainNav.style.opacity = '1';
+                }
             }
         });
     }
@@ -3522,6 +3542,13 @@ function openOverlaySearch() {
     overlaySearch.classList.add('active');
     document.body.classList.add('search-active');
     
+    // Disable sidebar when search is active
+    const mainNav = document.getElementById('main-nav');
+    if (mainNav) {
+        mainNav.style.pointerEvents = 'none';
+        mainNav.style.opacity = '0.5';
+    }
+    
     // Show background
     if (overlayBg) {
         overlayBg.style.display = 'block';
@@ -3549,6 +3576,13 @@ function closeOverlaySearch() {
     // Hide overlay search
     overlaySearch.classList.remove('active');
     document.body.classList.remove('search-active');
+    
+    // Re-enable sidebar when search is closed
+    const mainNav = document.getElementById('main-nav');
+    if (mainNav) {
+        mainNav.style.pointerEvents = 'auto';
+        mainNav.style.opacity = '1';
+    }
     
     // Hide background
     if (overlayBg) {
