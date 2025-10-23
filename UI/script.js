@@ -328,6 +328,9 @@ function setupMainNavigation() {
     const navLinks = document.querySelectorAll('.nav-link');
     const filterToggle = document.getElementById('filter-toggle');
     const filterDropdown = document.getElementById('filter-dropdown');
+    
+    console.log('Filter toggle element:', filterToggle);
+    console.log('Filter dropdown element:', filterDropdown);
     const filterOptions = document.querySelectorAll('.dropdown-option[data-filter]');
     const clearFiltersBtn = document.getElementById('clear-filters-btn');
     const planetViewBtn = document.getElementById('planet-view-btn');
@@ -361,16 +364,21 @@ function setupMainNavigation() {
     
     // Handle filter dropdown toggle
     if (filterToggle && filterDropdown) {
+        console.log('Setting up filter toggle event listener');
         filterToggle.addEventListener('click', function(e) {
+            console.log('Filter toggle clicked!');
             e.stopPropagation();
             const isOpening = !filterDropdown.classList.contains('active');
+            console.log('Filter is opening:', isOpening);
             filterDropdown.classList.toggle('active');
             filterToggle.classList.toggle('active');
             
             // Disable/enable sidebar based on dropdown state
             if (isOpening) {
+                console.log('Disabling sidebar for filter dropdown');
                 disableSidebar();
             } else {
+                console.log('Enabling sidebar for filter dropdown');
                 enableSidebar();
             }
         });
@@ -1079,6 +1087,7 @@ function disableSidebar() {
     const mainNav = document.getElementById('main-nav');
     if (mainNav) {
         mainNav.classList.add('sidebar-disabled');
+        document.body.classList.add('modal-open');
         console.log('Sidebar disabled with CSS class');
     }
 }
@@ -1087,6 +1096,7 @@ function enableSidebar() {
     const mainNav = document.getElementById('main-nav');
     if (mainNav) {
         mainNav.classList.remove('sidebar-disabled');
+        document.body.classList.remove('modal-open');
         console.log('Sidebar enabled - CSS class removed');
     }
 }
