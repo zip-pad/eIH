@@ -367,8 +367,12 @@ function setupMainNavigation() {
             filterDropdown.classList.toggle('active');
             filterToggle.classList.toggle('active');
             
-            // Disable/enable sidebar based on dropdown state
-            setSidebarState(isOpening);
+            // Show/hide blocking overlay based on dropdown state
+            if (isOpening) {
+                showBlockingOverlay();
+            } else {
+                hideBlockingOverlay();
+            }
         });
         
         // Close dropdown when clicking outside
@@ -377,8 +381,8 @@ function setupMainNavigation() {
                 filterDropdown.classList.remove('active');
                 filterToggle.classList.remove('active');
                 
-                // Re-enable sidebar when filter is closed
-                setSidebarState(false);
+                // Hide blocking overlay when filter is closed
+                hideBlockingOverlay();
             }
         });
     }
@@ -1056,8 +1060,8 @@ function openModal(modalId) {
     overlay.classList.add('active');
     libraryView.classList.add('blurred');
     
-    // Disable sidebar/navigation when modal is open
-    setSidebarState(true);
+    // Show blocking overlay to prevent sidebar interactions
+    showBlockingOverlay();
     
     // Add click outside to close functionality
     overlay.addEventListener('click', function(e) {
@@ -1070,37 +1074,59 @@ function openModal(modalId) {
 // Make openModal globally accessible
 window.openModal = openModal;
 
-// Centralized function to disable/enable sidebar
-function setSidebarState(disabled) {
-    const mainNav = document.getElementById('main-nav');
-    if (mainNav) {
-        if (disabled) {
-            mainNav.style.pointerEvents = 'none';
-            mainNav.style.opacity = '0.5';
-            mainNav.style.userSelect = 'none';
-            mainNav.setAttribute('data-disabled', 'true');
-        } else {
-            mainNav.style.pointerEvents = 'auto';
-            mainNav.style.opacity = '1';
-            mainNav.style.userSelect = 'auto';
-            mainNav.removeAttribute('data-disabled');
-        }
+// Create a blocking overlay to prevent all sidebar interactions
+function createBlockingOverlay() {
+    let overlay = document.getElementById('modal-blocking-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'modal-blocking-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: transparent;
+            z-index: 9999;
+            pointer-events: auto;
+        `;
+        document.body.appendChild(overlay);
     }
+    return overlay;
 }
 
-// Global event listener to prevent sidebar interactions when disabled
-document.addEventListener('click', function(e) {
-    const mainNav = document.getElementById('main-nav');
-    if (mainNav && mainNav.getAttribute('data-disabled') === 'true') {
-        // Check if click is on sidebar or its children
-        if (mainNav.contains(e.target)) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Sidebar interaction blocked - modal is open');
-            return false;
+function showBlockingOverlay() {
+    const overlay = createBlockingOverlay();
+    overlay.style.display = 'block';
+    
+    // Add click handler to close modals when clicking outside
+    overlay.onclick = function(e) {
+        // Close any open modals
+        closeModal();
+        closeOverlaySearch();
+        
+        // Close filter dropdown
+        const filterDropdown = document.getElementById('filter-dropdown');
+        const filterToggle = document.getElementById('filter-toggle');
+        if (filterDropdown && filterToggle) {
+            filterDropdown.classList.remove('active');
+            filterToggle.classList.remove('active');
         }
+        
+        // Hide the blocking overlay
+        hideBlockingOverlay();
+    };
+    
+    console.log('Blocking overlay shown - sidebar interactions blocked');
+}
+
+function hideBlockingOverlay() {
+    const overlay = document.getElementById('modal-blocking-overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+        console.log('Blocking overlay hidden - sidebar interactions restored');
     }
-});
+}
 
 // This function closes the modal overlay
 function closeModal() {
@@ -1113,8 +1139,8 @@ function closeModal() {
     overlay.classList.remove('active');
     libraryView.classList.remove('blurred');
     
-    // Re-enable sidebar/navigation when modal is closed
-    setSidebarState(false);
+    // Hide blocking overlay to restore sidebar interactions
+    hideBlockingOverlay();
     
     // Hide all modals
     document.querySelectorAll('.modal').forEach(modal => {
@@ -3555,8 +3581,8 @@ function openOverlaySearch() {
     overlaySearch.classList.add('active');
     document.body.classList.add('search-active');
     
-    // Disable sidebar when search is active
-    setSidebarState(true);
+    // Show blocking overlay when search is active
+    showBlockingOverlay();
     
     // Show background
     if (overlayBg) {
@@ -3586,8 +3612,8 @@ function closeOverlaySearch() {
     overlaySearch.classList.remove('active');
     document.body.classList.remove('search-active');
     
-    // Re-enable sidebar when search is closed
-    setSidebarState(false);
+    // Hide blocking overlay when search is closed
+    hideBlockingOverlay();
     
     // Hide background
     if (overlayBg) {
