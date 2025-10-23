@@ -1034,6 +1034,11 @@ function openModal(modalId) {
     
     // Show the requested modal
     const modal = document.getElementById(modalId);
+    if (!modal) {
+        console.error(`Modal with ID '${modalId}' not found!`);
+        return;
+    }
+    console.log(`Found modal:`, modal);
     modal.style.display = 'block';
     
     // Show modal overlay and blur library view
@@ -1050,6 +1055,9 @@ function openModal(modalId) {
         }
     });
 }
+
+// Make openModal globally accessible
+window.openModal = openModal;
 
 // This function closes the modal overlay
 function closeModal() {
