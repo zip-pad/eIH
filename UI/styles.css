@@ -2079,6 +2079,13 @@ body.search-active .main-navigation {
     transition: opacity 0.3s ease;
 }
 
+/* Disable sidebar when modals are open */
+.main-navigation.sidebar-disabled {
+    pointer-events: none !important;
+    opacity: 0.3 !important;
+    transition: opacity 0.3s ease;
+}
+
 body.search-active .masonry-item.search-match {
     filter: none !important;
     opacity: 1 !important;

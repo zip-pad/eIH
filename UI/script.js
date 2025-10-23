@@ -367,11 +367,11 @@ function setupMainNavigation() {
             filterDropdown.classList.toggle('active');
             filterToggle.classList.toggle('active');
             
-            // Show/hide blocking overlay based on dropdown state
+            // Disable/enable sidebar based on dropdown state
             if (isOpening) {
-                showBlockingOverlay();
+                disableSidebar();
             } else {
-                hideBlockingOverlay();
+                enableSidebar();
             }
         });
         
@@ -381,8 +381,8 @@ function setupMainNavigation() {
                 filterDropdown.classList.remove('active');
                 filterToggle.classList.remove('active');
                 
-                // Hide blocking overlay when filter is closed
-                hideBlockingOverlay();
+                // Enable sidebar when filter is closed
+                enableSidebar();
             }
         });
     }
@@ -1060,8 +1060,8 @@ function openModal(modalId) {
     overlay.classList.add('active');
     libraryView.classList.add('blurred');
     
-    // Show blocking overlay to prevent sidebar interactions
-    showBlockingOverlay();
+    // Disable sidebar when modal is open
+    disableSidebar();
     
     // Add click outside to close functionality
     overlay.addEventListener('click', function(e) {
@@ -1074,57 +1074,20 @@ function openModal(modalId) {
 // Make openModal globally accessible
 window.openModal = openModal;
 
-// Create a blocking overlay to prevent all sidebar interactions
-function createBlockingOverlay() {
-    let overlay = document.getElementById('modal-blocking-overlay');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'modal-blocking-overlay';
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: transparent;
-            z-index: 9999;
-            pointer-events: auto;
-        `;
-        document.body.appendChild(overlay);
+// Simple approach: Add/remove CSS class to disable sidebar
+function disableSidebar() {
+    const mainNav = document.getElementById('main-nav');
+    if (mainNav) {
+        mainNav.classList.add('sidebar-disabled');
+        console.log('Sidebar disabled with CSS class');
     }
-    return overlay;
 }
 
-function showBlockingOverlay() {
-    const overlay = createBlockingOverlay();
-    overlay.style.display = 'block';
-    
-    // Add click handler to close modals when clicking outside
-    overlay.onclick = function(e) {
-        // Close any open modals
-        closeModal();
-        closeOverlaySearch();
-        
-        // Close filter dropdown
-        const filterDropdown = document.getElementById('filter-dropdown');
-        const filterToggle = document.getElementById('filter-toggle');
-        if (filterDropdown && filterToggle) {
-            filterDropdown.classList.remove('active');
-            filterToggle.classList.remove('active');
-        }
-        
-        // Hide the blocking overlay
-        hideBlockingOverlay();
-    };
-    
-    console.log('Blocking overlay shown - sidebar interactions blocked');
-}
-
-function hideBlockingOverlay() {
-    const overlay = document.getElementById('modal-blocking-overlay');
-    if (overlay) {
-        overlay.style.display = 'none';
-        console.log('Blocking overlay hidden - sidebar interactions restored');
+function enableSidebar() {
+    const mainNav = document.getElementById('main-nav');
+    if (mainNav) {
+        mainNav.classList.remove('sidebar-disabled');
+        console.log('Sidebar enabled - CSS class removed');
     }
 }
 
@@ -1139,8 +1102,8 @@ function closeModal() {
     overlay.classList.remove('active');
     libraryView.classList.remove('blurred');
     
-    // Hide blocking overlay to restore sidebar interactions
-    hideBlockingOverlay();
+    // Enable sidebar when modal is closed
+    enableSidebar();
     
     // Hide all modals
     document.querySelectorAll('.modal').forEach(modal => {
@@ -3581,8 +3544,8 @@ function openOverlaySearch() {
     overlaySearch.classList.add('active');
     document.body.classList.add('search-active');
     
-    // Show blocking overlay when search is active
-    showBlockingOverlay();
+    // Disable sidebar when search is active
+    disableSidebar();
     
     // Show background
     if (overlayBg) {
@@ -3612,8 +3575,8 @@ function closeOverlaySearch() {
     overlaySearch.classList.remove('active');
     document.body.classList.remove('search-active');
     
-    // Hide blocking overlay when search is closed
-    hideBlockingOverlay();
+    // Enable sidebar when search is closed
+    enableSidebar();
     
     // Hide background
     if (overlayBg) {
