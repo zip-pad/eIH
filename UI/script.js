@@ -1708,7 +1708,9 @@ async function addLibraryItem(item) {
 
 // Function to delete an item from the library
 async function deleteLibraryItem(itemId) {
-    console.log('🗑️ Deleting item with ID:', itemId);
+    console.log('🗑️ Delete function called with ID:', itemId);
+    console.log('🗑️ Current user:', currentUser);
+    console.log('🗑️ Supabase client:', supabase);
     
     // Find the item
     const itemIndex = libraryItems.findIndex(item => item.id === itemId);
@@ -1765,6 +1767,18 @@ async function deleteLibraryItem(itemId) {
 
 // Make deleteLibraryItem globally accessible
 window.deleteLibraryItem = deleteLibraryItem;
+
+// Test function to verify delete functionality
+window.testDelete = function() {
+    console.log('🧪 Testing delete function...');
+    if (libraryItems.length > 0) {
+        const firstItem = libraryItems[0];
+        console.log('🧪 Deleting first item:', firstItem.title);
+        deleteLibraryItem(firstItem.id);
+    } else {
+        console.log('🧪 No items to delete');
+    }
+};
 
 // Function to clear all library data (including dummy data)
 function clearAllLibraryData() {
