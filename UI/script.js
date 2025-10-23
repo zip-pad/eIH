@@ -1044,9 +1044,16 @@ function openModal(modalId) {
     // Show modal overlay and blur library view
     const overlay = document.getElementById('modal-overlay');
     const libraryView = document.getElementById('library-view');
+    const mainNav = document.getElementById('main-nav');
     
     overlay.classList.add('active');
     libraryView.classList.add('blurred');
+    
+    // Disable sidebar/navigation when modal is open
+    if (mainNav) {
+        mainNav.style.pointerEvents = 'none';
+        mainNav.style.opacity = '0.5';
+    }
     
     // Add click outside to close functionality
     overlay.addEventListener('click', function(e) {
@@ -1065,9 +1072,16 @@ function closeModal() {
     
     const overlay = document.getElementById('modal-overlay');
     const libraryView = document.getElementById('library-view');
+    const mainNav = document.getElementById('main-nav');
     
     overlay.classList.remove('active');
     libraryView.classList.remove('blurred');
+    
+    // Re-enable sidebar/navigation when modal is closed
+    if (mainNav) {
+        mainNav.style.pointerEvents = 'auto';
+        mainNav.style.opacity = '1';
+    }
     
     // Hide all modals
     document.querySelectorAll('.modal').forEach(modal => {
