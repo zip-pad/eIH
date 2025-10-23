@@ -736,7 +736,7 @@ function updateMasonryDisplay(itemsToDisplay = null) {
     if (items.length === 0) {
         masonryGrid.innerHTML = `
             <div style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; min-height: 50vh; color: rgba(255, 255, 255, 0.6);">
-                <button onclick="openModal('add-modal')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 0.75rem 2rem; border-radius: 8px; cursor: pointer; font-weight: 500; margin: 0 auto;">
+                <button onclick="openModal('add-modal')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 0.75rem 2rem; border-radius: 8px; cursor: pointer; font-weight: 500; margin: 0 auto 0 calc(50% - 4px); transform: translateX(-50%);">
                     Add Your First Item
                 </button>
             </div>
