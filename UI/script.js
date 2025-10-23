@@ -700,7 +700,7 @@ function createMasonryItem(item, index) {
                 ${item.summary ? `<div class="masonry-summary">${item.summary}</div>` : ''}
             </div>
             <div class="masonry-type">${displayType}</div>
-            <button class="masonry-delete-btn" onclick="deleteLibraryItem(${item.id})" title="Delete item">×</button>
+            <button class="masonry-delete-btn" onclick="deleteLibraryItem('${item.id}')" title="Delete item">×</button>
             ${item.rating ? `<div class="masonry-rating">${'★'.repeat(Math.floor(item.rating))}${item.rating % 1 ? '☆' : ''}</div>` : ''}
         </div>
     `;
