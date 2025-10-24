@@ -162,27 +162,29 @@ html {
 
 .settings-dropdown {
     position: fixed;
-    left: 100%;
+    left: 50%;
     top: 50%;
-    transform: translateY(-50%) translateX(-10px);
-    background: rgba(0, 0, 0, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 1rem;
-    min-width: 250px;
+    transform: translateY(-50%) translateX(-50%) scale(0.9);
+    background: rgba(0, 0, 0, 0.98);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    min-width: 300px;
+    max-width: 90vw;
     max-height: 80vh;
     overflow-y: auto;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    z-index: 10000; /* High z-index to appear above everything */
+    backdrop-filter: blur(15px);
+    z-index: 10000;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
 }
 
 .settings-dropdown.active {
     opacity: 1;
     visibility: visible;
-    transform: translateY(-50%) translateX(0);
+    transform: translateY(-50%) translateX(-50%) scale(1);
 }
 
 .dropdown-section {
@@ -211,9 +213,9 @@ html {
 .dropdown-option {
     background: none;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    border-radius: 6px;
     color: #ffffff;
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem 1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -221,16 +223,25 @@ html {
     transition: all 0.3s ease;
     font-size: 0.9rem;
     text-align: left;
+    width: 100%;
+    pointer-events: auto;
+    user-select: none;
 }
 
 .dropdown-option:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateX(4px);
 }
 
 .dropdown-option.active {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-option:active {
+    transform: scale(0.98);
 }
 
 .color-preview {

@@ -399,19 +399,23 @@ function setupMainNavigation() {
         });
     }
     
-    // Handle filter options
-    filterOptions.forEach(option => {
-        option.addEventListener('click', function(e) {
+    // Handle filter options - use event delegation for better reliability
+    if (filterDropdown) {
+        filterDropdown.addEventListener('click', function(e) {
+            const option = e.target.closest('.dropdown-option[data-filter]');
+            if (!option) return;
+            
             e.stopPropagation(); // Prevent event from bubbling up
-            const filterType = this.getAttribute('data-filter');
-            const filterValue = this.getAttribute('data-value');
+            const filterType = option.getAttribute('data-filter');
+            const filterValue = option.getAttribute('data-value');
             
             console.log('Filter option clicked:', filterType, filterValue);
+            console.log('Option element:', option);
             
             // Update active state within the same filter category
             const categoryOptions = document.querySelectorAll(`[data-filter="${filterType}"]`);
             categoryOptions.forEach(opt => opt.classList.remove('active'));
-            this.classList.add('active');
+            option.classList.add('active');
             
             // Update filter state
             activeFilters[filterType] = filterValue;
@@ -419,7 +423,7 @@ function setupMainNavigation() {
             // Apply filters
             applyFilters();
         });
-    });
+    }
     
     // Handle clear filters button
     if (clearFiltersBtn) {
