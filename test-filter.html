@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Filter Test</title>
+    <style>
+        .test-container {
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .test-button {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #555;
+        }
+        .test-dropdown {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translateY(-50%) translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            min-width: 250px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 10000;
+        }
+        .test-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .test-option {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: #ffffff;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+        }
+        .test-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Filter Test</h1>
+        <button class="test-button" id="test-toggle">Toggle Filter</button>
+        <div class="test-dropdown" id="test-dropdown">
+            <button class="test-option" data-filter="type" data-value="all">All</button>
+            <button class="test-option" data-filter="type" data-value="book">Books</button>
+            <button class="test-option" data-filter="type" data-value="paper">Papers</button>
+        </div>
+        <div id="test-results"></div>
+    </div>
+
+    <script>
+        console.log('🧪 Starting filter test...');
+        
+        const toggle = document.getElementById('test-toggle');
+        const dropdown = document.getElementById('test-dropdown');
+        const options = document.querySelectorAll('.test-option');
+        const results = document.getElementById('test-results');
+        
+        console.log('Elements found:', {
+            toggle: !!toggle,
+            dropdown: !!dropdown,
+            options: options.length
+        });
+        
+        // Test toggle
+        if (toggle && dropdown) {
+            toggle.addEventListener('click', function(e) {
+                console.log('Toggle clicked!');
+                e.stopPropagation();
+                dropdown.classList.toggle('active');
+                results.innerHTML += '<p>Toggle clicked - dropdown toggled</p>';
+            });
+        }
+        
+        // Test options
+        options.forEach((option, index) => {
+            option.addEventListener('click', function(e) {
+                console.log('Option clicked:', index, this.textContent);
+                e.stopPropagation();
+                results.innerHTML += `<p>Option clicked: ${this.textContent}</p>`;
+            });
+        });
+        
+        // Test click outside
+        document.addEventListener('click', function(e) {
+            if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+                console.log('Click outside detected');
+                dropdown.classList.remove('active');
+            }
+        });
+        
+        console.log('🧪 Filter test setup complete');
+    </script>
+</body>
+</html>
