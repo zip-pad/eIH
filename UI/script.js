@@ -373,6 +373,10 @@ function setupMainNavigation() {
             filterDropdown.classList.toggle('active');
             filterToggle.classList.toggle('active');
             
+            console.log('Filter dropdown classes after toggle:', filterDropdown.classList.toString());
+            console.log('Filter dropdown computed style:', window.getComputedStyle(filterDropdown).display);
+            console.log('Filter dropdown z-index:', window.getComputedStyle(filterDropdown).zIndex);
+            
             // Disable/enable sidebar based on dropdown state
             if (isOpening) {
                 console.log('Disabling sidebar for filter dropdown');
@@ -397,9 +401,12 @@ function setupMainNavigation() {
     
     // Handle filter options
     filterOptions.forEach(option => {
-        option.addEventListener('click', function() {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent event from bubbling up
             const filterType = this.getAttribute('data-filter');
             const filterValue = this.getAttribute('data-value');
+            
+            console.log('Filter option clicked:', filterType, filterValue);
             
             // Update active state within the same filter category
             const categoryOptions = document.querySelectorAll(`[data-filter="${filterType}"]`);
