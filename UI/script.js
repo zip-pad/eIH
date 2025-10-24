@@ -396,10 +396,9 @@ function setupMainNavigation() {
         });
     }
     
-    // Handle filter options with proper event handling
+    // Handle filter options
     filterOptions.forEach(option => {
         option.addEventListener('click', function(e) {
-            e.preventDefault();
             e.stopPropagation();
             
             const filterType = this.getAttribute('data-filter');

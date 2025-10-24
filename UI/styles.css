@@ -164,7 +164,7 @@ html {
     position: fixed;
     left: 50%;
     top: 50%;
-    transform: translateY(-50%) translateX(-50%) scale(0.9);
+    transform: translateY(-50%) translateX(-50%);
     background: rgba(0, 0, 0, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
@@ -177,13 +177,12 @@ html {
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     z-index: 10000;
-    pointer-events: auto;
 }
 
 .settings-dropdown.active {
     opacity: 1;
     visibility: visible;
-    transform: translateY(-50%) translateX(-50%) scale(1);
+    transform: translateY(-50%) translateX(-50%);
 }
 
 .dropdown-section {
@@ -223,24 +222,16 @@ html {
     font-size: 0.9rem;
     text-align: left;
     width: 100%;
-    pointer-events: auto;
-    user-select: none;
 }
 
 .dropdown-option:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.3);
-    transform: translateX(4px);
 }
 
 .dropdown-option.active {
     background: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
-}
-
-.dropdown-option:active {
-    transform: scale(0.98);
 }
 
 .color-preview {
