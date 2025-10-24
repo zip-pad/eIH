@@ -2109,6 +2109,21 @@ body.search-active .masonry-item.search-match {
     position: relative;         /* ADDED: For z-index to work */
 }
 
+/* Wishlist item styling */
+.masonry-item[data-status="want-to-buy"] {
+    border-left: 4px solid #ff6b6b;
+    position: relative;
+}
+
+.masonry-item[data-status="want-to-buy"]::before {
+    content: "🛒";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 16px;
+    opacity: 0.8;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .overlay-search {
