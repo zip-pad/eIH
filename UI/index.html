@@ -253,8 +253,58 @@
             <a href="#" class="nav-link" data-action="signout">Sign Out</a>
         </div>
         
-        <!-- Filter Dropdown -->
+        <!-- Simple Filter Button -->
         <div class="settings-container">
+            <button class="simple-filter-btn" id="simple-filter-btn">
+                <span>Filter</span>
+            </button>
+        </div>
+        
+        <!-- Simple Filter Modal -->
+        <div id="simple-filter-modal" class="simple-filter-modal">
+            <div class="simple-filter-content">
+                <div class="simple-filter-header">
+                    <h3>Filter Library</h3>
+                    <button id="close-simple-filter" class="close-btn">&times;</button>
+                </div>
+                <div class="simple-filter-body">
+                    <div class="filter-section">
+                        <h4>Status</h4>
+                        <div class="filter-buttons">
+                            <button class="filter-btn" data-filter="status" data-value="all">All</button>
+                            <button class="filter-btn" data-filter="status" data-value="finished">Finished</button>
+                            <button class="filter-btn" data-filter="status" data-value="reading">Reading</button>
+                            <button class="filter-btn" data-filter="status" data-value="not-started">Not Started</button>
+                            <button class="filter-btn" data-filter="status" data-value="want-to-buy">Want to Buy</button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4>Type</h4>
+                        <div class="filter-buttons">
+                            <button class="filter-btn" data-filter="type" data-value="all">All</button>
+                            <button class="filter-btn" data-filter="type" data-value="Book">Books</button>
+                            <button class="filter-btn" data-filter="type" data-value="Paper">Papers</button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4>Category</h4>
+                        <div class="filter-buttons" id="category-buttons">
+                            <button class="filter-btn" data-filter="category" data-value="all">All</button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button id="clear-all-filters" class="clear-btn">Clear All</button>
+                        <button id="apply-filters" class="apply-btn">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Old Filter System (Hidden) -->
+        <div class="settings-container" style="display: none;">
             <button class="settings-toggle" id="filter-toggle">
                 <span>Filter</span>
                 <span class="dropdown-arrow">▼</span>

@@ -455,6 +455,9 @@ function setupMainNavigation() {
     // Populate dynamic categories
     populateFilterCategories();
     
+    // Setup simple filter modal
+    setupSimpleFilter();
+    
     // Handle view switching
     if (planetViewBtn) {
         planetViewBtn.addEventListener('click', function() {
@@ -3303,6 +3306,192 @@ function clearAndReload() {
 
 // Make it available globally for debugging
 window.clearAndReload = clearAndReload;
+
+// ===========================================
+// SIMPLE FILTER SYSTEM - BULLETPROOF APPROACH
+// ===========================================
+
+function setupSimpleFilter() {
+    console.log('Setting up simple filter system...');
+    
+    const filterBtn = document.getElementById('simple-filter-btn');
+    const filterModal = document.getElementById('simple-filter-modal');
+    const closeBtn = document.getElementById('close-simple-filter');
+    const clearBtn = document.getElementById('clear-all-filters');
+    const applyBtn = document.getElementById('apply-filters');
+    
+    // Simple filter state
+    let simpleFilters = {
+        status: 'all',
+        type: 'all',
+        category: 'all'
+    };
+    
+    // Open filter modal
+    if (filterBtn && filterModal) {
+        filterBtn.addEventListener('click', function() {
+            console.log('Opening simple filter modal');
+            filterModal.classList.add('active');
+            populateCategoryButtons();
+        });
+    }
+    
+    // Close filter modal
+    if (closeBtn && filterModal) {
+        closeBtn.addEventListener('click', function() {
+            console.log('Closing simple filter modal');
+            filterModal.classList.remove('active');
+        });
+    }
+    
+    // Close on backdrop click
+    if (filterModal) {
+        filterModal.addEventListener('click', function(e) {
+            if (e.target === filterModal) {
+                console.log('Closing filter modal - backdrop click');
+                filterModal.classList.remove('active');
+            }
+        });
+    }
+    
+    // Handle filter button clicks
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const filterType = this.getAttribute('data-filter');
+            const filterValue = this.getAttribute('data-value');
+            
+            console.log('Filter button clicked:', filterType, filterValue);
+            
+            // Remove active from same filter type
+            document.querySelectorAll(`[data-filter="${filterType}"]`).forEach(b => {
+                b.classList.remove('active');
+            });
+            
+            // Add active to clicked button
+            this.classList.add('active');
+            
+            // Update filter state
+            simpleFilters[filterType] = filterValue;
+            
+            console.log('Updated filters:', simpleFilters);
+        });
+    });
+    
+    // Clear all filters
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            console.log('Clearing all filters');
+            
+            // Reset filter state
+            simpleFilters = {
+                status: 'all',
+                type: 'all',
+                category: 'all'
+            };
+            
+            // Reset UI
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-value') === 'all') {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Apply filters (show all)
+            applySimpleFilters();
+        });
+    }
+    
+    // Apply filters
+    if (applyBtn) {
+        applyBtn.addEventListener('click', function() {
+            console.log('Applying filters:', simpleFilters);
+            applySimpleFilters();
+            filterModal.classList.remove('active');
+        });
+    }
+    
+    // Populate category buttons dynamically
+    function populateCategoryButtons() {
+        const categoryContainer = document.getElementById('category-buttons');
+        if (!categoryContainer) return;
+        
+        // Get unique categories
+        const categories = new Set();
+        libraryItems.forEach(item => {
+            if (item.category && item.category.trim() !== '') {
+                categories.add(item.category);
+            }
+        });
+        
+        // Clear existing category buttons (except "All")
+        const allBtn = categoryContainer.querySelector('[data-value="all"]');
+        categoryContainer.innerHTML = '';
+        if (allBtn) {
+            categoryContainer.appendChild(allBtn);
+        }
+        
+        // Add category buttons
+        categories.forEach(category => {
+            const btn = document.createElement('button');
+            btn.className = 'filter-btn';
+            btn.setAttribute('data-filter', 'category');
+            btn.setAttribute('data-value', category);
+            btn.textContent = category;
+            
+            btn.addEventListener('click', function() {
+                const filterType = this.getAttribute('data-filter');
+                const filterValue = this.getAttribute('data-value');
+                
+                // Remove active from same filter type
+                document.querySelectorAll(`[data-filter="${filterType}"]`).forEach(b => {
+                    b.classList.remove('active');
+                });
+                
+                // Add active to clicked button
+                this.classList.add('active');
+                
+                // Update filter state
+                simpleFilters[filterType] = filterValue;
+            });
+            
+            categoryContainer.appendChild(btn);
+        });
+    }
+    
+    // Apply the simple filters
+    function applySimpleFilters() {
+        console.log('Applying simple filters:', simpleFilters);
+        
+        const filteredItems = libraryItems.filter(item => {
+            // Status filter
+            if (simpleFilters.status !== 'all' && item.status !== simpleFilters.status) {
+                return false;
+            }
+            
+            // Type filter
+            if (simpleFilters.type !== 'all' && item.type !== simpleFilters.type) {
+                return false;
+            }
+            
+            // Category filter
+            if (simpleFilters.category !== 'all' && item.category !== simpleFilters.category) {
+                return false;
+            }
+            
+            return true;
+        });
+        
+        console.log(`Filtered ${libraryItems.length} items to ${filteredItems.length} items`);
+        
+        // Update the display
+        displayLibraryItems(filteredItems);
+        
+        // Show notification
+        showNotification(`Showing ${filteredItems.length} items`, 'info');
+    }
+}
 
 // Function to process image with AI
 async function processImage() {
