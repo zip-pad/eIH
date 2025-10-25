@@ -1,26 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filter Test</title>
     <style>
-        .test-container {
-            padding: 20px;
+        body {
             background: #1a1a1a;
             color: white;
             font-family: Arial, sans-serif;
+            padding: 20px;
         }
-        .test-button {
-            background: #333;
-            color: white;
-            border: 1px solid #555;
-            padding: 10px 20px;
-            margin: 10px;
+        
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .filter-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
             cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
         }
-        .test-button:hover {
-            background: #555;
-        }
-        .test-dropdown {
+        
+        .filter-dropdown {
             position: fixed;
             left: 50%;
             top: 50%;
@@ -30,85 +38,149 @@
             border-radius: 8px;
             padding: 1rem;
             min-width: 250px;
+            max-height: 80vh;
+            overflow-y: auto;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
             z-index: 10000;
         }
-        .test-dropdown.active {
+        
+        .filter-dropdown.active {
             opacity: 1;
             visibility: visible;
         }
-        .test-option {
+        
+        .dropdown-option {
             background: none;
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             color: #ffffff;
             padding: 0.5rem 0.75rem;
             cursor: pointer;
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-align: left;
             width: 100%;
-            margin: 5px 0;
+            margin-bottom: 5px;
         }
-        .test-option:hover {
+        
+        .dropdown-option:hover {
             background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .dropdown-option.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .test-results {
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <div class="test-container">
-        <h1>Filter Test</h1>
-        <button class="test-button" id="test-toggle">Toggle Filter</button>
-        <div class="test-dropdown" id="test-dropdown">
-            <button class="test-option" data-filter="type" data-value="all">All</button>
-            <button class="test-option" data-filter="type" data-value="book">Books</button>
-            <button class="test-option" data-filter="type" data-value="paper">Papers</button>
+        <h1>Filter Dropdown Test</h1>
+        
+        <button class="filter-toggle" id="filter-toggle">
+            <span>Filter</span>
+        </button>
+        
+        <div class="filter-dropdown" id="filter-dropdown">
+            <div class="dropdown-section">
+                <h4>Status</h4>
+                <button class="dropdown-option active" data-filter="status" data-value="all">
+                    <span>All</span>
+                </button>
+                <button class="dropdown-option" data-filter="status" data-value="finished">
+                    <span>Finished</span>
+                </button>
+                <button class="dropdown-option" data-filter="status" data-value="reading">
+                    <span>Reading</span>
+                </button>
+            </div>
         </div>
-        <div id="test-results"></div>
+        
+        <div class="test-results" id="test-results">
+            <h3>Test Results:</h3>
+            <div id="results"></div>
+        </div>
     </div>
 
     <script>
         console.log('🧪 Starting filter test...');
         
-        const toggle = document.getElementById('test-toggle');
-        const dropdown = document.getElementById('test-dropdown');
-        const options = document.querySelectorAll('.test-option');
-        const results = document.getElementById('test-results');
+        const filterToggle = document.getElementById('filter-toggle');
+        const filterDropdown = document.getElementById('filter-dropdown');
+        const filterOptions = document.querySelectorAll('.dropdown-option[data-filter]');
+        const resultsDiv = document.getElementById('results');
         
-        console.log('Elements found:', {
-            toggle: !!toggle,
-            dropdown: !!dropdown,
-            options: options.length
-        });
+        function logResult(message) {
+            console.log(message);
+            resultsDiv.innerHTML += '<div>' + message + '</div>';
+        }
         
-        // Test toggle
-        if (toggle && dropdown) {
-            toggle.addEventListener('click', function(e) {
-                console.log('Toggle clicked!');
+        // Test 1: Check if elements exist
+        logResult('✅ Filter toggle exists: ' + !!filterToggle);
+        logResult('✅ Filter dropdown exists: ' + !!filterDropdown);
+        logResult('✅ Filter options count: ' + filterOptions.length);
+        
+        // Test 2: Check filter toggle click
+        if (filterToggle && filterDropdown) {
+            filterToggle.addEventListener('click', function(e) {
                 e.stopPropagation();
-                dropdown.classList.toggle('active');
-                results.innerHTML += '<p>Toggle clicked - dropdown toggled</p>';
+                logResult('🎯 Filter toggle clicked!');
+                
+                const isOpening = !filterDropdown.classList.contains('active');
+                logResult('🎯 Filter is opening: ' + isOpening);
+                
+                filterDropdown.classList.toggle('active');
+                filterToggle.classList.toggle('active');
+                
+                logResult('🎯 Dropdown classes after toggle: ' + filterDropdown.classList.toString());
+                logResult('🎯 Dropdown opacity: ' + window.getComputedStyle(filterDropdown).opacity);
+                logResult('🎯 Dropdown visibility: ' + window.getComputedStyle(filterDropdown).visibility);
             });
         }
         
-        // Test options
-        options.forEach((option, index) => {
+        // Test 3: Check filter options clicks
+        filterOptions.forEach((option, index) => {
             option.addEventListener('click', function(e) {
-                console.log('Option clicked:', index, this.textContent);
                 e.stopPropagation();
-                results.innerHTML += `<p>Option clicked: ${this.textContent}</p>`;
+                
+                const filterType = this.getAttribute('data-filter');
+                const filterValue = this.getAttribute('data-value');
+                
+                logResult('🎯 Filter option ' + index + ' clicked: ' + filterType + ' = ' + filterValue);
+                
+                // Update active state
+                const categoryOptions = document.querySelectorAll(`[data-filter="${filterType}"]`);
+                categoryOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                logResult('🎯 Updated active state for: ' + filterType);
             });
         });
         
-        // Test click outside
+        // Test 4: Check click outside
         document.addEventListener('click', function(e) {
-            if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
-                console.log('Click outside detected');
-                dropdown.classList.remove('active');
+            if (!filterToggle.contains(e.target) && !filterDropdown.contains(e.target)) {
+                logResult('🎯 Clicking outside dropdown - closing');
+                filterDropdown.classList.remove('active');
+                filterToggle.classList.remove('active');
             }
         });
         
-        console.log('🧪 Filter test setup complete');
+        logResult('🧪 Filter test setup complete!');
     </script>
 </body>
 </html>
