@@ -5,8 +5,36 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-    console.error('Missing Supabase environment variables. Please check your .env file.');
+// Validate environment variables
+const isInvalidUrl = !supabaseUrl || 
+                     supabaseUrl.includes('your-project') || 
+                     supabaseUrl.trim() === '' ||
+                     !supabaseUrl.startsWith('https://');
+
+const isInvalidKey = !supabaseKey || 
+                     supabaseKey.includes('your-anon-key') || 
+                     supabaseKey.trim() === '';
+
+if (isInvalidUrl || isInvalidKey) {
+    const errorMsg = '❌ Supabase configuration error:\n\n' +
+                     (isInvalidUrl ? '• VITE_SUPABASE_URL is missing or contains placeholder\n' : '') +
+                     (isInvalidKey ? '• VITE_SUPABASE_ANON_KEY is missing or contains placeholder\n' : '') +
+                     '\n' +
+                     'For local development:\n' +
+                     '1. Create a .env file in the UI folder\n' +
+                     '2. Add: VITE_SUPABASE_URL=https://your-project-id.supabase.co\n' +
+                     '3. Add: VITE_SUPABASE_ANON_KEY=your-anon-key\n\n' +
+                     'For Vercel deployment:\n' +
+                     '1. Go to your Vercel project settings\n' +
+                     '2. Navigate to Environment Variables\n' +
+                     '3. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY\n' +
+                     '4. Redeploy your application';
+    
+    console.error(errorMsg);
+    alert(errorMsg);
+    
+    // Don't create the client with invalid values
+    throw new Error('Supabase environment variables are not configured correctly');
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
