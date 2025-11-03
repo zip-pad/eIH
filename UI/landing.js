@@ -5,6 +5,14 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Debug: Log environment variables (URL will be visible, key will be truncated)
+console.log('🔧 Supabase Config Check:', {
+    hasUrl: !!supabaseUrl,
+    hasKey: !!supabaseKey,
+    urlPreview: supabaseUrl ? supabaseUrl.substring(0, 30) + '...' : 'MISSING',
+    keyPreview: supabaseKey ? '***' + supabaseKey.substring(supabaseKey.length - 8) : 'MISSING'
+});
+
 // Validate environment variables
 const isInvalidUrl = !supabaseUrl || 
                      supabaseUrl.includes('your-project') || 
