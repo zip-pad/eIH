@@ -348,27 +348,15 @@ function setupTypingEffect() {
 
 // MAIN NAVIGATION SYSTEM
 // This function sets up the main navigation sidebar
-// Global filter state
+// Global filter state - only status filter
 let activeFilters = {
-    type: 'all',
-    status: 'all',
-    rating: 'all',
-    difficulty: 'all',
-    language: 'all',
-    category: 'all'
+    status: 'all'
 };
 
 function setupMainNavigation() {
     console.log('Setting up main navigation...');
     
     const navLinks = document.querySelectorAll('.nav-link');
-    const filterToggle = document.getElementById('filter-toggle');
-    const filterDropdown = document.getElementById('filter-dropdown');
-    
-    console.log('Filter toggle element:', filterToggle);
-    console.log('Filter dropdown element:', filterDropdown);
-    const filterOptions = document.querySelectorAll('.dropdown-option[data-filter]');
-    const clearFiltersBtn = document.getElementById('clear-filters-btn');
     const planetViewBtn = document.getElementById('planet-view-btn');
     const masonryViewBtn = document.getElementById('masonry-view-btn');
     
@@ -468,93 +456,6 @@ function setupMainNavigation() {
         });
     }
     
-    // Handle filter dropdown toggle
-    if (filterToggle && filterDropdown) {
-        console.log('Setting up filter toggle event listener');
-        filterToggle.addEventListener('click', function(e) {
-            console.log('Filter toggle clicked!');
-            e.stopPropagation();
-            const isOpening = !filterDropdown.classList.contains('active');
-            console.log('Filter is opening:', isOpening);
-            filterDropdown.classList.toggle('active');
-            filterToggle.classList.toggle('active');
-            
-            // Disable/enable sidebar based on dropdown state
-            if (isOpening) {
-                console.log('Disabling sidebar for filter dropdown');
-                disableSidebar();
-            } else {
-                console.log('Enabling sidebar for filter dropdown');
-                enableSidebar();
-            }
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!filterToggle.contains(e.target) && !filterDropdown.contains(e.target)) {
-                console.log('Clicking outside dropdown - closing');
-                filterDropdown.classList.remove('active');
-                filterToggle.classList.remove('active');
-                
-                // Enable sidebar when filter is closed
-                enableSidebar();
-            }
-        });
-    }
-    
-    // Handle filter options
-    filterOptions.forEach(option => {
-        option.addEventListener('click', function(e) {
-            e.stopPropagation();
-            
-            const filterType = this.getAttribute('data-filter');
-            const filterValue = this.getAttribute('data-value');
-            
-            console.log('Filter option clicked:', filterType, filterValue);
-            
-            // Update active state within the same filter category
-            const categoryOptions = document.querySelectorAll(`[data-filter="${filterType}"]`);
-            categoryOptions.forEach(opt => opt.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Update filter state
-            activeFilters[filterType] = filterValue;
-            
-            // Apply filters
-            applyFilters();
-        });
-    });
-    
-    // Handle clear filters button
-    if (clearFiltersBtn) {
-        clearFiltersBtn.addEventListener('click', function() {
-            // Reset all filters to 'all'
-            activeFilters = {
-                type: 'all',
-                status: 'all',
-                rating: 'all',
-                difficulty: 'all',
-                language: 'all',
-                category: 'all'
-            };
-            
-            // Reset UI - remove active from all filter options and set 'all' as active
-            filterOptions.forEach(option => {
-                option.classList.remove('active');
-                if (option.getAttribute('data-value') === 'all') {
-                    option.classList.add('active');
-                }
-            });
-            
-            // Apply filters (which will show all items)
-            applyFilters();
-            showNotification('All filters cleared!', 'info');
-        });
-    }
-    
-    // Populate dynamic categories
-    populateFilterCategories();
-    
     // Handle view switching
     if (planetViewBtn) {
         planetViewBtn.addEventListener('click', function() {
@@ -576,104 +477,16 @@ function setupMainNavigation() {
 }
 
 // FILTER SYSTEM
-// This function populates the category filter options dynamically
-function populateFilterCategories() {
-    const categoryFilterOptions = document.getElementById('category-filter-options');
-    if (!categoryFilterOptions) return;
-    
-    // Get unique categories from library items
-    const categories = new Set();
-    libraryItems.forEach(item => {
-        if (item.category && item.category.trim() !== '') {
-            categories.add(item.category);
-        }
-    });
-    
-    // Keep the "All" button and add category buttons
-    const allButton = categoryFilterOptions.querySelector('[data-value="all"]');
-    categoryFilterOptions.innerHTML = '';
-    if (allButton) {
-        categoryFilterOptions.appendChild(allButton);
-    }
-    
-    // Add buttons for each unique category
-    categories.forEach(category => {
-        const button = document.createElement('button');
-        button.className = 'dropdown-option';
-        button.setAttribute('data-filter', 'category');
-        button.setAttribute('data-value', category);
-        button.innerHTML = `<span>${category}</span>`;
-        
-        button.addEventListener('click', function() {
-            const filterType = this.getAttribute('data-filter');
-            const filterValue = this.getAttribute('data-value');
-            
-            // Update active state
-            const categoryOptions = document.querySelectorAll(`[data-filter="${filterType}"]`);
-            categoryOptions.forEach(opt => opt.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Update filter state
-            activeFilters[filterType] = filterValue;
-            
-            // Apply filters
-            applyFilters();
-        });
-        
-        categoryFilterOptions.appendChild(button);
-    });
-}
-
-// This function applies all active filters to the library items
+// This function applies the status filter to the library items
 function applyFilters() {
     const currentView = localStorage.getItem('currentView') || 'masonry';
     
-    // Filter the library items
+    // Filter the library items by status only
     let filteredItems = libraryItems.filter(item => {
-        // Type filter
-        if (activeFilters.type !== 'all' && item.type !== activeFilters.type) {
-            return false;
-        }
-        
         // Status filter
         if (activeFilters.status !== 'all' && item.status !== activeFilters.status) {
             return false;
         }
-        
-        // Rating filter
-        if (activeFilters.rating !== 'all') {
-            const ratingThreshold = parseInt(activeFilters.rating);
-            if (!item.rating || item.rating < ratingThreshold) {
-                return false;
-            }
-        }
-        
-        // Difficulty filter
-        if (activeFilters.difficulty !== 'all') {
-            if (!item.difficulty) return false;
-            
-            const difficulty = parseInt(item.difficulty);
-            if (activeFilters.difficulty === 'easy' && (difficulty < 1 || difficulty > 3)) {
-                return false;
-            }
-            if (activeFilters.difficulty === 'medium' && (difficulty < 4 || difficulty > 7)) {
-                return false;
-            }
-            if (activeFilters.difficulty === 'hard' && (difficulty < 8 || difficulty > 10)) {
-                return false;
-            }
-        }
-        
-        // Language filter
-        if (activeFilters.language !== 'all' && item.language !== activeFilters.language) {
-            return false;
-        }
-        
-        // Category filter
-        if (activeFilters.category !== 'all' && item.category !== activeFilters.category) {
-            return false;
-        }
-        
         return true;
     });
     
@@ -682,12 +495,6 @@ function applyFilters() {
         updateMasonryDisplay(filteredItems);
     } else {
         updatePlanetDisplay(filteredItems);
-    }
-    
-    // Show notification about filtered results
-    const activeFilterCount = Object.values(activeFilters).filter(v => v !== 'all').length;
-    if (activeFilterCount > 0) {
-        showNotification(`Showing ${filteredItems.length} of ${libraryItems.length} items`, 'info');
     }
 }
 
