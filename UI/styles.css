@@ -2111,6 +2111,40 @@ body.search-active .masonry-item.search-match {
     position: relative;         /* ADDED: For z-index to work */
 }
 
+/* Filter Container */
+.filter-container {
+    position: relative;
+}
+
+/* Filter Dropdown */
+.filter-dropdown {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    min-width: 200px;
+    max-height: 80vh;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+}
+
+.filter-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+#status-filter-toggle.active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .overlay-search {

@@ -377,6 +377,11 @@ function setupMainNavigation() {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             
+            // Skip filter toggle - handle it separately
+            if (this.id === 'status-filter-toggle') {
+                return;
+            }
+            
             // Remove active class from all links
             navLinks.forEach(l => l.classList.remove('active'));
             // Add active class to clicked link
@@ -397,6 +402,71 @@ function setupMainNavigation() {
             }
         });
     });
+    
+    // Handle status filter toggle
+    const statusFilterToggle = document.getElementById('status-filter-toggle');
+    const statusFilterDropdown = document.getElementById('status-filter-dropdown');
+    
+    if (statusFilterToggle && statusFilterDropdown) {
+        statusFilterToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isOpening = !statusFilterDropdown.classList.contains('active');
+            
+            // Close other modals/overlays when opening filter
+            if (isOpening) {
+                closeModal();
+                closeOverlaySearch();
+                disableSidebar();
+            }
+            
+            statusFilterDropdown.classList.toggle('active');
+            statusFilterToggle.classList.toggle('active');
+        });
+        
+        // Handle status filter options
+        const statusFilterOptions = statusFilterDropdown.querySelectorAll('.dropdown-option[data-filter="status"]');
+        statusFilterOptions.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                const filterValue = this.getAttribute('data-value');
+                
+                // Update active state
+                statusFilterOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update filter state
+                activeFilters.status = filterValue;
+                
+                // Apply filters
+                applyFilters();
+                
+                // Show notification
+                const statusText = filterValue === 'all' ? 'All' : 
+                                  filterValue === 'finished' ? 'Finished' :
+                                  filterValue === 'reading' ? 'Reading' :
+                                  filterValue === 'not-started' ? 'Not Started' :
+                                  filterValue === 'looking-to-buy' ? 'Looking to buy' : filterValue;
+                showNotification(`Filtering by status: ${statusText}`, 'info');
+                
+                // Close dropdown after selection
+                statusFilterDropdown.classList.remove('active');
+                statusFilterToggle.classList.remove('active');
+                enableSidebar();
+            });
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!statusFilterToggle.contains(e.target) && !statusFilterDropdown.contains(e.target)) {
+                statusFilterDropdown.classList.remove('active');
+                statusFilterToggle.classList.remove('active');
+                enableSidebar();
+            }
+        });
+    }
     
     // Handle filter dropdown toggle
     if (filterToggle && filterDropdown) {

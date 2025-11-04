@@ -250,6 +250,31 @@
         <div class="nav-links">
             <a href="#" class="nav-link" data-action="add">Add New</a>
             <a href="#" class="nav-link" data-section="search">Search</a>
+            <div class="filter-container">
+                <a href="#" class="nav-link" id="status-filter-toggle">Filter</a>
+                <div id="status-filter-dropdown" class="filter-dropdown">
+                    <div class="dropdown-section">
+                        <h4>Status</h4>
+                        <div class="dropdown-options">
+                            <button class="dropdown-option active" data-filter="status" data-value="all">
+                                <span>All</span>
+                            </button>
+                            <button class="dropdown-option" data-filter="status" data-value="finished">
+                                <span>Finished</span>
+                            </button>
+                            <button class="dropdown-option" data-filter="status" data-value="reading">
+                                <span>Reading</span>
+                            </button>
+                            <button class="dropdown-option" data-filter="status" data-value="not-started">
+                                <span>Not Started</span>
+                            </button>
+                            <button class="dropdown-option" data-filter="status" data-value="looking-to-buy">
+                                <span>Looking to buy</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <a href="#" class="nav-link" data-action="signout">Sign Out</a>
         </div>
     </nav>
