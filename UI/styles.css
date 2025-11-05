@@ -2122,9 +2122,9 @@ body.search-active .masonry-item.search-match {
     right: -180px;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    background: rgba(20, 20, 20, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
     padding: 1rem;
     min-width: 200px;
     max-height: 80vh;
@@ -2133,6 +2133,7 @@ body.search-active .masonry-item.search-match {
     visibility: hidden;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     z-index: 10000;
     pointer-events: auto !important;
 }
