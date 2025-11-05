@@ -407,10 +407,26 @@ function setupMainNavigation() {
                 closeModal();
                 closeOverlaySearch();
                 disableSidebar();
+                // Disable pointer events on library view
+                const libraryView = document.getElementById('library-view');
+                if (libraryView) {
+                    libraryView.style.pointerEvents = 'none';
+                }
+            } else {
+                // Re-enable pointer events on library view
+                const libraryView = document.getElementById('library-view');
+                if (libraryView) {
+                    libraryView.style.pointerEvents = 'auto';
+                }
             }
             
             statusFilterDropdown.classList.toggle('active');
             statusFilterToggle.classList.toggle('active');
+        });
+        
+        // Prevent clicks on filter dropdown from propagating
+        statusFilterDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
         
         // Handle status filter options
@@ -443,6 +459,11 @@ function setupMainNavigation() {
                 statusFilterDropdown.classList.remove('active');
                 statusFilterToggle.classList.remove('active');
                 enableSidebar();
+                // Re-enable pointer events on library view
+                const libraryView = document.getElementById('library-view');
+                if (libraryView) {
+                    libraryView.style.pointerEvents = 'auto';
+                }
             });
         });
         
@@ -452,6 +473,11 @@ function setupMainNavigation() {
                 statusFilterDropdown.classList.remove('active');
                 statusFilterToggle.classList.remove('active');
                 enableSidebar();
+                // Re-enable pointer events on library view
+                const libraryView = document.getElementById('library-view');
+                if (libraryView) {
+                    libraryView.style.pointerEvents = 'auto';
+                }
             }
         });
     }

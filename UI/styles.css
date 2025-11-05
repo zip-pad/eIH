@@ -2134,11 +2134,17 @@ body.search-active .masonry-item.search-match {
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     z-index: 10000;
+    pointer-events: auto !important;
 }
 
 .filter-dropdown.active {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto !important;
+}
+
+.filter-dropdown * {
+    pointer-events: auto !important;
 }
 
 #status-filter-toggle.active {
