@@ -2119,7 +2119,7 @@ body.search-active .masonry-item.search-match {
 /* Filter Dropdown */
 .filter-dropdown {
     position: fixed;
-    right: -180px;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
     background: rgba(20, 20, 20, 0.95);
